@@ -43,7 +43,29 @@ window.addEventListener('DOMContentLoaded', () => {
         const menu = document.querySelector('menu');
         const closeBtn = document.querySelector('.close-btn');
         const menuItems = menu.querySelectorAll('ul>li');
+        const mainBlockLink = document.querySelector('main>a');
 
+        function getScroll(item){
+            const itemHref = item.getAttribute('href');
+            document.querySelector(itemHref).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        mainBlockLink.addEventListener('click', elem => {
+            elem.preventDefault();
+            getScroll(mainBlockLink);
+        });
+
+        menuItems.forEach(item => {
+            const link = item.querySelector('a');
+            link.addEventListener('click', (elem) => {
+                elem.preventDefault();
+                getScroll(link);
+            });
+        });
+        
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
         };
@@ -85,7 +107,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 requestId = requestAnimationFrame(showPopUp);
                 } else {
                     popupContent.style.left = ``;
-                    popup.style.display = 'block';gi
+                    popup.style.display = 'block';
                 }
             });
         });
