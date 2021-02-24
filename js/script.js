@@ -66,14 +66,14 @@ window.addEventListener('DOMContentLoaded', () => {
         let i = -50;
         iterator = 3;
         let requestId;
-        
+
         function showPopUp(){
             requestId = requestAnimationFrame(showPopUp);
             popup.style.display = 'block';
             popupContent.style.left = `${i}%`;
             i += iterator;
             if(i > 37) {
-                popupContent.style.left = `37%`;
+                popupContent.style.left = `38%`;
                 cancelAnimationFrame(requestId);
             }
         };
@@ -84,7 +84,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     i = -50;
                 requestId = requestAnimationFrame(showPopUp);
                 } else {
-                    popup.style.display = 'block';
+                    popupContent.style.left = ``;
+                    popup.style.display = 'block';gi
                 }
             });
         });
