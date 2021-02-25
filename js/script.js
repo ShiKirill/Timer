@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const btnMenu = document.querySelector('.menu');
         const menu = document.querySelector('menu');
         const closeBtn = document.querySelector('.close-btn');
-        const menuItems = menu.querySelectorAll('ul>li');
+        const menuItems = menu.querySelectorAll('ul>li>a');
         const mainBlockLink = document.querySelector('main>a');
 
         function getScroll(item){
@@ -59,10 +59,10 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         menuItems.forEach(item => {
-            const link = item.querySelector('a');
-            link.addEventListener('click', (elem) => {
+            // const link = item.querySelector('a');
+            item.addEventListener('click', (elem) => {
                 elem.preventDefault();
-                getScroll(link);
+                getScroll(item);
             });
         });
         
@@ -85,16 +85,17 @@ window.addEventListener('DOMContentLoaded', () => {
         const popupBtn = document.querySelectorAll('.popup-btn');
         const popUpClose = document.querySelector('.popup-close');
         const popupContent = document.querySelector('.popup-content');
-        let i = -50;
-        iterator = 3;
+        console.dir(popupContent);
+        let i = -42;
+        iterator = 2;
         let requestId;
 
         function showPopUp(){
             requestId = requestAnimationFrame(showPopUp);
             popup.style.display = 'block';
-            popupContent.style.left = `${i}%`;
+            popupContent.style.left = `${i}rem`;
             i += iterator;
-            if(i > 37) {
+            if(popupContent.offsetLeft > 570) {
                 popupContent.style.left = `38%`;
                 cancelAnimationFrame(requestId);
             }
