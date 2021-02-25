@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         popupBtn.forEach(elem => {
             elem.addEventListener('click',()=>{
-                if (document.documentElement.clientWidth>=768) {
+                if (popupContent.offsetLeft/document.documentElement.clientWidth > 0.38) {
                     i = -50;
                 requestId = requestAnimationFrame(showPopUp);
                 } else {
