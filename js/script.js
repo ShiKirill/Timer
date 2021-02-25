@@ -59,7 +59,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         menuItems.forEach(item => {
-            // const link = item.querySelector('a');
             item.addEventListener('click', (elem) => {
                 elem.preventDefault();
                 getScroll(item);
@@ -95,7 +94,7 @@ window.addEventListener('DOMContentLoaded', () => {
             popup.style.display = 'block';
             popupContent.style.left = `${i}rem`;
             i += iterator;
-            if(popupContent.offsetLeft > 570) {
+            if(popupContent.offsetLeft/document.documentElement.clientWidth > 0.38) {
                 popupContent.style.left = `38%`;
                 cancelAnimationFrame(requestId);
             }
@@ -119,4 +118,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     };
     togglePopUp();
+
+    
+    
 });
