@@ -42,8 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const btnMenu = document.querySelector('.menu');
         const menu = document.querySelector('menu');
         const activeMenu = document.getElementsByTagName('menu')[0];
-        const closeBtn = document.querySelector('.close-btn');
-        const menuItems = menu.querySelectorAll('ul>li>a');
+        
 
         const handlerMenu = () => {
             menu
@@ -60,7 +59,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         
     };
-    
+
     toggleMenu();
 
     // Прокрутка
