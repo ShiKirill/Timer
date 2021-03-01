@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', () => {
         let timerHours = document.querySelector('#timer-hours');
         let timerMinutes = document.querySelector('#timer-minutes');
         let timerSeconds = document.querySelector('#timer-seconds');
+
         function addZero(k) {
             if (k / 10 < 1) {
                 return '0' + k;
@@ -11,6 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 return k;
             }
         };
+
         function getTimeRemaining() {
             let dateStop = new Date(deadline).getTime();
             let dateNow = new Date().getTime();
@@ -18,8 +20,9 @@ window.addEventListener('DOMContentLoaded', () => {
             let seconds = Math.floor(timeRemaining % 60);
             let minutes = Math.floor((timeRemaining / 60) % 60);
             let hours = Math.floor(timeRemaining / 60 / 60);
-            return {timeRemaining, hours, minutes, seconds};
+            return { timeRemaining, hours, minutes, seconds };
         }
+
         function updateClock() {
             let timer = getTimeRemaining();
             timerHours.textContent = addZero(timer.hours);
@@ -72,7 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const itemHref = item.getAttribute('href');
             document
                 .querySelector(itemHref)
-                .scrollIntoView({behavior: 'smooth', block: 'start'});
+                .scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         mainBlockLink.addEventListener('click', elem => {
@@ -189,7 +192,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const slide = document.querySelectorAll('.portfolio-item');
         const dotParent = document.querySelector('.portfolio-dots');
         const dot = `<li class="dot"></li>`;
-        for(let i=0; i < slide.length; i++) {
+        for (let i = 0; i < slide.length; i++) {
             dotParent.innerHTML += dot;
             if (i === 0) {
                 dotParent.firstElementChild.classList.add('dot-active');
@@ -247,29 +250,29 @@ window.addEventListener('DOMContentLoaded', () => {
             if (!target.matches('.portfolio-btn, .dot')) {
                 return;
             }
-                prevSlide(slide, currentSlide, 'portfolio-item-active');
-                prevSlide(dot, currentSlide, 'dot-active');
+            prevSlide(slide, currentSlide, 'portfolio-item-active');
+            prevSlide(dot, currentSlide, 'dot-active');
 
-                if (target.matches('#arrow-right')) {
-                    currentSlide++;
-                } else if (target.matches('#arrow-left')) {
-                    currentSlide--;
-                } else if (target.matches('.dot')) {
-                    dot.forEach((item, index) => {
-                        if (item === target) {
-                            currentSlide = index;
-                        }
-                    })
-                }
-                if (currentSlide>=slide.length) {
-                    currentSlide = 0;
-                }
-                if (currentSlide < 0){
-                    currentSlide = slide.length-1;
-                }
-                nextSlide(slide, currentSlide, 'portfolio-item-active');
-                nextSlide(dot, currentSlide, 'dot-active');
-            
+            if (target.matches('#arrow-right')) {
+                currentSlide++;
+            } else if (target.matches('#arrow-left')) {
+                currentSlide--;
+            } else if (target.matches('.dot')) {
+                dot.forEach((item, index) => {
+                    if (item === target) {
+                        currentSlide = index;
+                    }
+                })
+            }
+            if (currentSlide >= slide.length) {
+                currentSlide = 0;
+            }
+            if (currentSlide < 0) {
+                currentSlide = slide.length - 1;
+            }
+            nextSlide(slide, currentSlide, 'portfolio-item-active');
+            nextSlide(dot, currentSlide, 'dot-active');
+
         });
 
         slider.addEventListener('mouseover', (event) => {
@@ -291,4 +294,69 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     slider();
+
+    const photoChange = () => {
+        const command = document.getElementById('command').querySelectorAll('img');
+
+        const changeSrc = (item) => {
+            const tmp = item.getAttribute('src');
+            item.setAttribute('src', item.dataset.img);
+            item.dataset.img = tmp;
+        }
+
+        command.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                changeSrc(item);
+            });
+            item.addEventListener('mouseleave', () => {
+                changeSrc(item);
+            });
+        });
+    }
+
+    photoChange();
+
+    const calculator = () => {
+        const calcBlock = document.querySelector('.calc-block');
+        calcBlock.addEventListener('input', event => {
+            const target = event.target;
+            target.value = target.value.replace(/\D/, '');
+        });
+    }
+
+    calculator();
+
+    const questionForm = () => {
+        const inputForm = document.querySelector('.footer-form-input');
+        const footerInputs = inputForm.querySelectorAll('input');
+        const check = (item) => {
+            if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form2-message') {
+                item.value = item.value.replace(/[^а-яё -%]/ig, '');
+            } else if (item.getAttribute('id') === 'form2-email') {
+                item.value = item.value.replace(/[^a-z@_.!~*'-]/ig, '');
+            } else if (item.getAttribute('id') === 'form2-phone') {
+                item.value = item.value.replace(/[^0-9()-]/g, '')
+            }
+        };
+        inputForm.addEventListener('input', event => {
+            const target = event.target;
+            check(target);
+        });
+        footerInputs.forEach(item => {
+            item.addEventListener('blur', () => {
+                check(item);      
+                item.value = item.value.replace(/\s+/g, ' ');
+                item.value = item.value.replace(/[-]+/g, '-');
+                item.value = item.value.replace(/^[\s-]/, '');
+                item.value = item.value.replace(/[\s-]$/, '');
+                if (item.getAttribute('id') === 'form2-name') {
+                    item.value = item.value.replace(/\S+/gi, (match) => {
+                        return match[0].toUpperCase() + match.substr(1);
+                    });
+                }
+            });
+        });
+    }
+
+    questionForm();
 });
