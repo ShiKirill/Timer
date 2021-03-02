@@ -332,20 +332,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
             let squareValue = +calcSquare.value;
 
-            if (calcCount.value> 1) {
-                countValue += (calcCount.value-1)/10;
+            if (calcCount.value > 1) {
+                countValue += (calcCount.value - 1) / 10;
             }
             if (calcDay.value && calcDay.value < 5) {
                 dayValue *= 2;
-            } else if (calcDay.value && calcDay.value < 10){
-                dayValue *=1.5;
+            } else if (calcDay.value && calcDay.value < 10) {
+                dayValue *= 1.5;
             }
 
             if (typeValue && squareValue) {
                 total = price * typeValue * squareValue * countValue * dayValue;
             }
 
-            totalValue.textContent = total;
+            if (total === 0) {
+                totalValue.textContent = total;
+            } else {
+                let tmp = 1;
+                const numberAnimation = () => {
+                    let animId = requestAnimationFrame(numberAnimation);
+                    if (tmp < total) {
+                        totalValue.textContent = tmp;
+                    } else {
+                        totalValue.textContent =total;
+                        cancelAnimationFrame(animId);
+                    }
+                    tmp += Math.floor(price * squareValue * 0.01);
+                };
+                numberAnimation();
+            }
         }
 
         calcBlock.addEventListener('input', event => {
@@ -356,7 +371,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         calcBlock.addEventListener('change', event => {
             let target = event.target;
-                if (target.matches('select') || target.matches('input')) {
+            if (target.matches('select') || target.matches('input')) {
                 countSum();
             }
         });
@@ -382,7 +397,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         footerInputs.forEach(item => {
             item.addEventListener('blur', () => {
-                check(item);      
+                check(item);
                 item.value = item.value.replace(/\s+/g, ' ');
                 item.value = item.value.replace(/[-]+/g, '-');
                 item.value = item.value.replace(/^[\s-]/, '');
