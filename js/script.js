@@ -367,6 +367,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const questionForm = () => {
         const inputForm = document.querySelector('.footer-form-input');
         const footerInputs = inputForm.querySelectorAll('input');
+        
         const check = (item) => {
             if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form2-message' || item.getAttribute('id') === 'form1-name' || item.getAttribute('id') === 'form1-message') {
                 item.value = item.value.replace(/[^а-яё -%]/ig, '');
