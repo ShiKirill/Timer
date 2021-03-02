@@ -327,17 +327,22 @@ window.addEventListener('DOMContentLoaded', () => {
     calculator();
 
     const questionForm = () => {
+        const mainFormInput = document.querySelector('.main-form-input');
         const inputForm = document.querySelector('.footer-form-input');
         const footerInputs = inputForm.querySelectorAll('input');
         const check = (item) => {
-            if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form2-message') {
+            if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form2-message' || item.getAttribute('id') === 'form1-name' || item.getAttribute('id') === 'form1-message') {
                 item.value = item.value.replace(/[^а-яё -%]/ig, '');
-            } else if (item.getAttribute('id') === 'form2-email') {
+            } else if (item.getAttribute('id') === 'form2-email' || item.getAttribute('id') === 'form1-email') {
                 item.value = item.value.replace(/[^a-z@_.!~*'-]/ig, '');
-            } else if (item.getAttribute('id') === 'form2-phone') {
+            } else if (item.getAttribute('id') === 'form2-phone' || item.getAttribute('id') === 'form1-phone') {
                 item.value = item.value.replace(/[^0-9()-]/g, '')
             }
         };
+        mainFormInput.addEventListener('input', event => {
+            const target = event.target;
+            check(target);
+        });
         inputForm.addEventListener('input', event => {
             const target = event.target;
             check(target);
