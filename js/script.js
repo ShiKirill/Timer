@@ -357,7 +357,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         totalValue.textContent =total;
                         cancelAnimationFrame(animId);
                     }
-                    tmp += Math.floor(price * squareValue * 0.01);
+                    tmp += Math.floor(price * squareValue * dayValue * countValue * 0.03);
                 };
                 numberAnimation();
             }
@@ -382,6 +382,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const questionForm = () => {
         const inputForm = document.querySelector('.footer-form-input');
         const footerInputs = inputForm.querySelectorAll('input');
+        const mainFormInput = document.querySelector('.main-form-input');
+        const mainInputs = mainFormInput.querySelectorAll('input');
+        
         const check = (item) => {
             if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form2-message' || item.getAttribute('id') === 'form1-name' || item.getAttribute('id') === 'form1-message') {
                 item.value = item.value.replace(/[^а-яё -%]/ig, '');
@@ -399,19 +402,27 @@ window.addEventListener('DOMContentLoaded', () => {
             const target = event.target;
             check(target);
         });
-        footerInputs.forEach(item => {
+
+        const inputCheck = (item) => {
             item.addEventListener('blur', () => {
-                check(item);
+                check(item);      
                 item.value = item.value.replace(/\s+/g, ' ');
                 item.value = item.value.replace(/[-]+/g, '-');
-                item.value = item.value.replace(/^[\s-]/, '');
-                item.value = item.value.replace(/[\s-]$/, '');
-                if (item.getAttribute('id') === 'form2-name') {
+                item.value = item.value.replace(/^[\s+]/, '');
+                item.value = item.value.replace(/[\s+]$/, '');
+                if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form1-name') {
                     item.value = item.value.replace(/\S+/gi, (match) => {
                         return match[0].toUpperCase() + match.substr(1);
                     });
                 }
             });
+        }
+
+        mainInputs.forEach(item => {
+            inputCheck(item);
+        });
+        footerInputs.forEach(item => {
+            inputCheck(item);
         });
     }
 
