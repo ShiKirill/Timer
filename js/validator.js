@@ -153,6 +153,27 @@ const validSecond = new Validator({
   }
 }); 
 
+const validThird = new Validator({
+  selector: '#form3',
+  pattern: {},
+  method: {
+    'form3-phone': [
+      ['notEmpty'],
+      ['pattern', 'phone']
+    ],
+    'form3-email': [
+      ['notEmpty'],
+      ['pattern', 'email']
+    ],
+    'form3-name': [
+      ['notEmpty'],
+      ['pattern', 'name']
+    ]
+  }
+}); 
+
 validFirst.init();
 
 validSecond.init();
+
+validThird.init();
