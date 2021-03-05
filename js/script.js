@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         const intervalID = setInterval(updateClock, 1000);
     }
-    countTimer('28 february 2021');
+    countTimer('28 march 2021');
 
     // Меню
     const toggleMenu = () => {
@@ -354,7 +354,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     if (tmp < total) {
                         totalValue.textContent = tmp;
                     } else {
-                        totalValue.textContent =total;
+                        totalValue.textContent = total;
                         cancelAnimationFrame(animId);
                     }
                     tmp += Math.floor(price * squareValue * dayValue * countValue * 0.03);
@@ -384,14 +384,18 @@ window.addEventListener('DOMContentLoaded', () => {
         const footerInputs = inputForm.querySelectorAll('input');
         const mainFormInput = document.querySelector('.main-form-input');
         const mainInputs = mainFormInput.querySelectorAll('input');
-        
+        const modalForm = document.getElementById('form3');
+        const modalInputs = modalForm.querySelectorAll('input');
+
         const check = (item) => {
-            if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form2-message' || item.getAttribute('id') === 'form1-name' || item.getAttribute('id') === 'form1-message') {
+            if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form1-name' || item.getAttribute('id') === 'form3-name') {
                 item.value = item.value.replace(/[^а-яё -%]/ig, '');
-            } else if (item.getAttribute('id') === 'form2-email' || item.getAttribute('id') === 'form1-email') {
+            } else if (item.getAttribute('id') === 'form2-email' || item.getAttribute('id') === 'form1-email' || item.getAttribute('id') === 'form3-email') {
                 item.value = item.value.replace(/[^a-z@_.!~*'-]/ig, '');
-            } else if (item.getAttribute('id') === 'form2-phone' || item.getAttribute('id') === 'form1-phone') {
-                item.value = item.value.replace(/[^0-9()-]/g, '')
+            } else if (item.getAttribute('id') === 'form2-phone' || item.getAttribute('id') === 'form1-phone' || item.getAttribute('id') === 'form3-phone') {
+                item.value = item.value.replace(/[^+0-9]/, '')
+            } else if (item.getAttribute('id') === 'form2-message' || item.getAttribute('id') === 'form1-message' || item.getAttribute('id') === 'form3-message') {
+                item.value = item.value.replace(/[^а-яё0-9 -,.;:!?]/ig, '');
             }
         };
         mainFormInput.addEventListener('input', event => {
@@ -402,21 +406,25 @@ window.addEventListener('DOMContentLoaded', () => {
             const target = event.target;
             check(target);
         });
+        modalForm.addEventListener('input', event => {
+            const target = event.target;
+            check(target);
+        });
 
         const inputCheck = (item) => {
             item.addEventListener('blur', () => {
-                check(item);      
+                check(item);
                 item.value = item.value.replace(/\s+/g, ' ');
                 item.value = item.value.replace(/[-]+/g, '-');
                 item.value = item.value.replace(/^[\s+]/, '');
                 item.value = item.value.replace(/[\s+]$/, '');
-                if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form1-name') {
+                if (item.getAttribute('id') === 'form2-name' || item.getAttribute('id') === 'form1-name' || item.getAttribute('id') === 'form3-name') {
                     item.value = item.value.replace(/\S+/gi, (match) => {
                         return match[0].toUpperCase() + match.substr(1);
                     });
                 }
             });
-        }
+        };
 
         mainInputs.forEach(item => {
             inputCheck(item);
@@ -424,7 +432,77 @@ window.addEventListener('DOMContentLoaded', () => {
         footerInputs.forEach(item => {
             inputCheck(item);
         });
+        modalInputs.forEach(item => {
+            inputCheck(item);
+        })
     }
 
     questionForm();
+
+    // send-ajax-form
+
+    const sendForm = () => {
+        const errorMsg = 'Что-то пошло не так...';
+        const loadMsg = 'Загрука...';
+        const successMsg = 'Спасибо! Мы скоро с вами свяжемся!';
+
+        const form1 = document.getElementById('form1');
+        const form2 = document.getElementById('form2');
+        const form3 = document.getElementById('form3');
+        const statusMsg = document.createElement('div');
+        statusMsg.style.cssText = 'font-size: 2rem; color: white;';
+        
+        const formEvent = (form) => {
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                form.appendChild(statusMsg);
+                const formData = new FormData(form);
+                let body = {};
+                for (let val of formData.entries()) {
+                    body[val[0]] = val[1];
+                }
+                postData(body, ()=> {
+                    statusMsg.textContent = successMsg;
+                }, (error)=>{
+                    statusMsg.textContent = errorMsg;
+                    console.error(error);
+                });
+                form.querySelectorAll('input').forEach(item => {
+                    item.value = '';
+                });
+            });
+        };
+
+        formEvent(form1);
+        formEvent(form2);
+        formEvent(form3);
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+
+            request.addEventListener('readystatechange', () => {
+                statusMsg.textContent = loadMsg;
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200){
+                    outputData();
+                } else{
+                    errorData(request.status);
+                }
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'multipart/form-data');
+            request.send(JSON.stringify(body));
+        };
+    };
+
+    sendForm();
+
+    const validator = () => {
+
+    };
+
+    validator();
 });
