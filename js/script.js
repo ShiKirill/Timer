@@ -442,8 +442,42 @@ window.addEventListener('DOMContentLoaded', () => {
     // send-ajax-form
 
     const sendForm = () => {
+        const style = document.createElement('style');
+                style.textContent = `
+    .sk-three-bounce {
+        width: 8em;
+        margin: auto;
+        text-align: center;
+    }
+    .sk-three-bounce .sk-child {
+        width: 2em;
+        height: 2em;
+        background-color: #337ab7;
+        border-radius: 100%;
+        display: inline-block;
+        -webkit-animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
+        animation: sk-three-bounce 1.4s ease-in-out 0s infinite both;
+    }
+    .sk-three-bounce .sk-bounce-1 {
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+    }
+    .sk-three-bounce .sk-bounce-2 {
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+    }
+    
+    @keyframes sk-three-bounce {
+        0%, 80%, 100% {
+        transform: scale(0);
+        }
+        40% {
+        transform: scale(1.0);
+        }
+    }
+    `;
         const errorMsg = 'Что-то пошло не так...';
-        const loadMsg = 'Загрука...';
+        const loadMsg = 'Загрузка...';
         const successMsg = 'Спасибо! Мы скоро с вами свяжемся!';
 
         const form1 = document.getElementById('form1');
@@ -451,7 +485,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const form3 = document.getElementById('form3');
         const statusMsg = document.createElement('div');
         statusMsg.style.cssText = 'font-size: 2rem; color: white;';
-        
+
         const formEvent = (form) => {
             form.addEventListener('submit', event => {
                 event.preventDefault();
@@ -461,9 +495,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 for (let val of formData.entries()) {
                     body[val[0]] = val[1];
                 }
-                postData(body, ()=> {
+                document.head.appendChild(style);
+                postData(body, () => {
                     statusMsg.textContent = successMsg;
-                }, (error)=>{
+                }, (error) => {
                     statusMsg.textContent = errorMsg;
                     console.error(error);
                 });
@@ -481,13 +516,20 @@ window.addEventListener('DOMContentLoaded', () => {
             const request = new XMLHttpRequest();
 
             request.addEventListener('readystatechange', () => {
-                statusMsg.textContent = loadMsg;
+                //statusMsg.textContent = loadMsg;
+                statusMsg.innerHTML = `
+                <div class="sk-three-bounce">
+                    <div class="sk-bounce-1 sk-child"></div>
+                    <div class="sk-bounce-2 sk-child"></div>
+                    <div class="sk-bounce-3 sk-child"></div>
+                </div>
+                `;
                 if (request.readyState !== 4) {
                     return;
                 }
-                if (request.status === 200){
+                if (request.status === 200) {
                     outputData();
-                } else{
+                } else {
                     errorData(request.status);
                 }
             });
