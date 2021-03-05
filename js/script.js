@@ -499,10 +499,4 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     sendForm();
-
-    const validator = () => {
-
-    };
-
-    validator();
 });
