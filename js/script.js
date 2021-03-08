@@ -496,9 +496,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     body[val[0]] = val[1];
                 }
                 document.head.appendChild(style);
-                postData(body, () => {
-                    statusMsg.textContent = successMsg;
-                }, (error) => {
+                postData(body).then(() =>statusMsg.textContent = successMsg).catch(error => {
                     statusMsg.textContent = errorMsg;
                     console.error(error);
                 });
@@ -512,11 +510,10 @@ window.addEventListener('DOMContentLoaded', () => {
         formEvent(form2);
         formEvent(form3);
 
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-
+        const postData = (body) => {
+            return new Promise((resolve, reject) => {
+                const request = new XMLHttpRequest();
             request.addEventListener('readystatechange', () => {
-                //statusMsg.textContent = loadMsg;
                 statusMsg.innerHTML = `
                 <div class="sk-three-bounce">
                     <div class="sk-bounce-1 sk-child"></div>
@@ -528,15 +525,17 @@ window.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 if (request.status === 200) {
-                    outputData();
+                    resolve();
                 } else {
-                    errorData(request.status);
+                    reject(request.status);
                 }
             });
 
             request.open('POST', './server.php');
             request.setRequestHeader('Content-Type', 'multipart/form-data');
             request.send(JSON.stringify(body));
+            });
+            
         };
     };
 
