@@ -530,7 +530,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     reject(request.status);
                 }
             });
-
             request.open('POST', './server.php');
             request.setRequestHeader('Content-Type', 'multipart/form-data');
             request.send(JSON.stringify(body));
