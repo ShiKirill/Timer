@@ -443,7 +443,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const sendForm = () => {
         const style = document.createElement('style');
-                style.textContent = `
+        style.textContent = `
     .sk-three-bounce {
         width: 8em;
         margin: auto;
@@ -496,10 +496,17 @@ window.addEventListener('DOMContentLoaded', () => {
                     body[val[0]] = val[1];
                 }
                 document.head.appendChild(style);
-                postData(body).then(() =>statusMsg.textContent = successMsg).catch(error => {
-                    statusMsg.textContent = errorMsg;
-                    console.error(error);
-                });
+                postData(body)
+                    .then((response) => {
+                        if (response.status !== 200) {
+                            throw new Error('status network not 200')
+                        }
+                        statusMsg.textContent = successMsg;
+                    })
+                    .catch(error => {
+                        statusMsg.textContent = errorMsg;
+                        console.error(error);
+                    });
                 form.querySelectorAll('input').forEach(item => {
                     item.value = '';
                 });
@@ -511,30 +518,20 @@ window.addEventListener('DOMContentLoaded', () => {
         formEvent(form3);
 
         const postData = (body) => {
-            return new Promise((resolve, reject) => {
-                const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                statusMsg.innerHTML = `
+            statusMsg.innerHTML = `
                 <div class="sk-three-bounce">
                     <div class="sk-bounce-1 sk-child"></div>
                     <div class="sk-bounce-2 sk-child"></div>
                     <div class="sk-bounce-3 sk-child"></div>
                 </div>
                 `;
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    resolve();
-                } else {
-                    reject(request.status);
-                }
+            return fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
             });
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'multipart/form-data');
-            request.send(JSON.stringify(body));
-            });
-            
         };
     };
 
