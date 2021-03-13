@@ -11,7 +11,12 @@ const calculator = (price = 100) => {
         let countValue = 1;
         let dayValue = 1;
         const typeValue = calcType.options[calcType.selectedIndex].value;
-
+        if (typeValue === ''){
+            totalValue.textContent = '';
+            calcSquare.value = '';
+            calcCount.value = '';
+            calcDay.value = '';
+        }
         let squareValue = +calcSquare.value;
 
         if (calcCount.value > 1) {
@@ -36,7 +41,7 @@ const calculator = (price = 100) => {
                 if (tmp < total) {
                     totalValue.textContent = tmp;
                 } else {
-                    totalValue.textContent = total;
+                    totalValue.textContent = total.toFixed(2);
                     cancelAnimationFrame(animId);
                 }
                 tmp += Math.floor(price * squareValue * dayValue * countValue * 0.03);

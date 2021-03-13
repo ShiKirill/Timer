@@ -44,30 +44,41 @@ const sendForm = () => {
   statusMsg.style.cssText = 'font-size: 2rem; color: white;';
 
   const formEvent = (form) => {
-      form.addEventListener('submit', event => {
-          event.preventDefault();
-          form.appendChild(statusMsg);
-          const formData = new FormData(form);
-          let body = {};
-          for (let val of formData.entries()) {
-              body[val[0]] = val[1];
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      form.appendChild(statusMsg);
+      const formData = new FormData(form);
+      let body = {};
+      for (let val of formData.entries()) {
+        body[val[0]] = val[1];
+      }
+      document.head.appendChild(style);
+      postData(body)
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error('status network not 200')
           }
-          document.head.appendChild(style);
-          postData(body)
-              .then((response) => {
-                  if (response.status !== 200) {
-                      throw new Error('status network not 200')
-                  }
-                  statusMsg.textContent = successMsg;
-              })
-              .catch(error => {
-                  statusMsg.textContent = errorMsg;
-                  console.error(error);
-              });
-          form.querySelectorAll('input').forEach(item => {
-              item.value = '';
-          });
+          statusMsg.textContent = successMsg;
+          if (form.closest('.popup')) {
+            setTimeout(()=>{
+              form.closest('.popup').style.display = 'none';
+            statusMsg.textContent = '';
+            },500);
+          } else {
+            setTimeout(() => {
+              statusMsg.textContent = '';
+            }, 3000);
+          }
+          
+        })
+        .catch(error => {
+          statusMsg.textContent = errorMsg;
+          console.error(error);
+        });
+      form.querySelectorAll('input').forEach(item => {
+        item.value = '';
       });
+    });
   };
 
   formEvent(form1);
@@ -75,20 +86,20 @@ const sendForm = () => {
   formEvent(form3);
 
   const postData = (body) => {
-      statusMsg.innerHTML = `
+    statusMsg.innerHTML = `
           <div class="sk-three-bounce">
               <div class="sk-bounce-1 sk-child"></div>
               <div class="sk-bounce-2 sk-child"></div>
               <div class="sk-bounce-3 sk-child"></div>
           </div>
           `;
-      return fetch('./server.php', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(body)
-      });
+    return fetch('./server.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
   };
 };
 
